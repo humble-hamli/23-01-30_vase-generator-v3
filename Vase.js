@@ -24,22 +24,21 @@ function getRndNumber(min, max) {
   return Math.random() * (max - min + 1) + min;
 }
 
-
 let vaseGuides = [
   { id: "lip", x: getRndNumber(20, 80), y: 0 },
   { id: "body", x: getRndNumber(20, 80), y: 80 },
   { id: "foot", x: getRndNumber(20, 80), y: 100 },
 ];
 
-console.log(reloadButton)
-
-reloadButton.onclick = (() => {
-    vaseGuides = [
-      { id: "lip", x: getRndNumber(20, 80), y: 0 },
-      { id: "body", x: getRndNumber(20, 80), y: 80 },
-      { id: "foot", x: getRndNumber(20, 80), y: 100 },
-    ];
-})
-
-
 console.log("Master Values: ", vaseGuides);
+
+reloadButton.onclick = () => {
+  console.log("RELOAD");
+  vaseGuides = [
+    { id: "lip", x: getRndNumber(20, 80), y: 0 },
+    { id: "body", x: getRndNumber(20, 80), y: 80 },
+    { id: "foot", x: getRndNumber(20, 80), y: 100 },
+  ];
+};
+
+

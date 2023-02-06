@@ -1,42 +1,48 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
-// Setup
-const canvas = document.querySelector("#cvs3");
-let cvs = canvas;
-console.log(cvs);
-let cvsW = getCvsWidth(cvs);
-let cvsH = getCvsWidth(cvs);
+let canvas, scene, camera, renderer;
+function init() {
+  // Setup
+  canvas = document.querySelector("#cvs3");
+  let cvs = canvas;
+  console.log(cvs);
+  let cvsW = getCvsWidth(cvs);
+  let cvsH = getCvsWidth(cvs);
 
-console.log('Canvas 3 created Size: ', cvsW, cvsH);
+  console.log("Canvas 3 created Size: ", cvsW, cvsH);
 
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, cvsW / cvsH, 0.1, 1000);
-console.log('Scene and Camera created === at three-Vase.js [14]');
+  scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(75, cvsW / cvsH, 0.1, 1000);
 
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize(cvsW, cvsH);
-renderer.setClearColor(0x222222);
-canvas.appendChild(renderer.domElement);
-console.log('=== render – three-Vase.js [19] ===', renderer);
+  console.log("Scene and Camera created === at three-Vase.js [14]");
 
-const controls = new OrbitControls(camera, renderer.domElement);
-console.log('=== controls – three-Vase.js [21] ===', controls);
+  renderer = new THREE.WebGLRenderer();
+  renderer.setSize(cvsW, cvsH);
+  renderer.setClearColor(0x222222);
+  canvas.appendChild(renderer.domElement);
 
-// Guides
-let guideLineMat = new THREE.LineBasicMaterial({ color: "blue" });
-let guideMat = new THREE.MeshBasicMaterial({ color: "purple", wireframe: true });
+  const controls = new OrbitControls(camera, renderer.domElement);
 
-function drawGrid() {
+  // add Objects
+
+  // Guides
+  let guideLineMat = new THREE.LineBasicMaterial({ color: "blue" });
+  let guideMat = new THREE.MeshBasicMaterial({
+    color: "purple",
+    wireframe: true,
+  });
+
+  function drawGrid() {
     const size = 10;
     const divisions = 10;
 
     const gridHelper = new THREE.GridHelper(size, divisions);
     scene.add(gridHelper);
     console.log("=== gridHelper – three-Vase.js [30] ===", gridHelper);
-}
+  }
 
-function createCenterLine() {
+  function createCenterLine() {
     const dots = [];
     dots.push(new THREE.Vector3(0, 0, 0));
     dots.push(new THREE.Vector3(0, 10, 0));
@@ -45,62 +51,64 @@ function createCenterLine() {
     const centerLine = new THREE.LineSegments(centerLineGeom, guideLineMat);
     scene.add(centerLine);
     console.log("=== centerLine – three-Vase.js [38] ===", centerLine);
-}
+  }
 
-function createBoundingBox() {
-  // Cube Guide
-  const boundingBoxGeom = new THREE.BoxGeometry(2, 2, 2);
-  const boundingBox = new THREE.Mesh(boundingBoxGeom, guideMat);
-  boundingBox.position.y = 1;
-  scene.add(boundingBox);
-}
+  function createBoundingBox() {
+    // Cube Guide
+    const boundingBoxGeom = new THREE.BoxGeometry(2, 2, 2);
+    const boundingBox = new THREE.Mesh(boundingBoxGeom, guideMat);
+    boundingBox.position.y = 1;
+    scene.add(boundingBox);
+  }
 
-function drawGuides(origin) {
-  let guides = [];
-  vaseGuides.forEach((d, i) => {
-    let guideGeom = new THREE.PlaneGeometry(2, 2);
+  function drawGuides(origin) {
+    let guides = [];
+    vaseGuides.forEach((d, i) => {
+      let guideGeom = new THREE.PlaneGeometry(2, 2);
 
-    guides.push(new THREE.Mesh(guideGeom, guideMat));
-    guides[i].rotation.x = Math.PI / 2;
-    guides[i].position.y = 2 - (2 / 100) * d.y;
-    scene.add(guides[i]);
-  });
-}
+      guides.push(new THREE.Mesh(guideGeom, guideMat));
+      guides[i].rotation.x = Math.PI / 2;
+      guides[i].position.y = 2 - (2 / 100) * d.y;
+      scene.add(guides[i]);
+    });
+  }
 
-function createGuides() {
-    drawGrid();
-    createCenterLine(); 
-    createBoundingBox(); 
-    drawGuides(vaseGuides); 
-}
+    function createGuides() {
+    // Link to Buttons
+    if (gridButton.ariaPressed == "true") {
+      drawGrid();
+    }
 
-// Functionality Testing
-let cube;
-function createTestCube() {
-  //  Test CUbe
-  const geometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
-  const green = new THREE.MeshStandardMaterial({ color: 0x781ce5 });
-cube = new THREE.Mesh(geometry, green);
-  scene.add(cube);
-  console.log("=== Cube – three-Vase.js [44] ===", cube);
-}
+    if (guideButton.ariaPressed == "true") {
+      drawGuides(vaseGuides);
+      createBoundingBox();
+    }
+        
+     if (guideShapeButton.ariaPressed == "true") {
+       // Lathe v3
+         drawVase(vaseGuides, "blue");
+     }
+  }
 
-createGuides();
-createTestCube();
+  createGuides();
 
-// Lathe v3
-drawVase(vaseGuides, "blue");
+  // Functionality Testing
+  let cube;
+  function createTestCube() {
+    //  Test CUbe
+    const geometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
+    const green = new THREE.MeshStandardMaterial({ color: 0x781ce5 });
+    cube = new THREE.Mesh(geometry, green);
+    scene.add(cube);
+    console.log("=== Cube – three-Vase.js [44] ===", cube);
+  }
+  createTestCube();
 
 
-function drawVase(origin, color) {
+    // Draw Vase
+
+  function drawVase(origin, color) {
     const points = [];
-    // for (let i = 0; i < 4; ++i) {
-    //     let x = 0.1 * i;
-    //     let y = 0.5 * i;
-    //     points.push(
-    //         new THREE.Vector2(x, y)
-    //     );
-    // }
 
     origin.forEach((d, i) => {
       let centerW = cvsW / 2;
@@ -137,44 +145,47 @@ function drawVase(origin, color) {
     lathe.rotation.x = Math.PI;
     // lathe.rotation,y = 10
     // add the lathe object to the scene
-    scene.add(lathe);
-
-}
-
-
-
-const ambient = new THREE.AmbientLight(0x404040, 5);
-const point = new THREE.PointLight(0xe4ff00, 1, 10);
-point.position.set(3, 3, 2);
-scene.add(ambient);
-scene.add(point);
-
-// const extrudeLathe = {
-//     steps: 2,
-//     depth: 16,
-//     bevelEnabled: false,
-//     bevelThickness: 1,
-//     bevelSize: 1,
-//     bevelOffset: 0,
-//     bevelSegments: 1
-//   };
-
-// const exGeom = new THREE.ExtrudeGeometry(latheGeometry, extrudeLathe)
-// const exMat = new THREE.MeshStandardMaterial({ color: "green" });
-// const exMesh = new THREE.Mesh(exGeom, exMat);
-// scene.add(exMesh);
-
-camera.position.z = 5;
-
-function animate() {
-    requestAnimationFrame(animate);
+      scene.add(lathe);
+  }
     
+
+
+  // Lighting
+  const ambient = new THREE.AmbientLight(0x404040, 5);
+  const point = new THREE.PointLight(0xe4ff00, 1, 10);
+  point.position.set(3, 3, 2);
+  scene.add(ambient);
+  scene.add(point);
+
+  camera.position.z = 5;
+  camera.position.y = 1;
+  camera.lookAt(0, 1, 0);
+
+  function animate() {
+    requestAnimationFrame(animate);
+
     // lathe.rotation.x += 0.01;
 
-  cube.rotation.x += 0.01;
-  cube.rotation.y += 0.01;
+    cube.rotation.x += 0.01;
+    cube.rotation.y += 0.01;
 
-  renderer.render(scene, camera);
+    renderer.render(scene, camera);
+  }
+
+  animate();
 }
 
-animate();
+// Call Init Funtion for first Execution
+init();
+
+// Reload
+function reloadScene() {
+  canvas = document.querySelector("#cvs3");
+  canvas.removeChild(canvas.lastChild);
+  init();
+  console.log("Reload Scene === at three-Vase.js [174]");
+}
+reloadButton.addEventListener("click", reloadScene);
+
+let controls = document.querySelector(".btn-wrapper")
+controls.addEventListener("click", reloadScene)
