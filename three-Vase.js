@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
+// Setup
 const canvas = document.querySelector("#cvs3");
 let cvs = canvas;
 console.log(cvs);
@@ -19,116 +20,127 @@ renderer.setClearColor(0x222222);
 canvas.appendChild(renderer.domElement);
 console.log('=== render – three-Vase.js [19] ===', renderer);
 
-
 const controls = new OrbitControls(camera, renderer.domElement);
 console.log('=== controls – three-Vase.js [21] ===', controls);
-// Controls created
 
 // Guides
-let guideMat = new THREE.LineBasicMaterial({ color: "blue" });
-const size = 10;
-const divisions = 10;
+let guideLineMat = new THREE.LineBasicMaterial({ color: "blue" });
+let guideMat = new THREE.MeshBasicMaterial({ color: "purple", wireframe: true });
 
-const gridHelper = new THREE.GridHelper(size, divisions);
-scene.add(gridHelper);
-console.log('=== gridHelper – three-Vase.js [30] ===', gridHelper);
+function drawGrid() {
+    const size = 10;
+    const divisions = 10;
 
-const dots = [];
-dots.push(new THREE.Vector3(0, 0, 0));
-dots.push(new THREE.Vector3(0, 10, 0));
-
-const centerLineGeom = new THREE.BufferGeometry().setFromPoints(dots)
-const centerLine = new THREE.LineSegments(centerLineGeom, guideMat)
-scene.add(centerLine);
-console.log('=== centerLine – three-Vase.js [38] ===', centerLine);
-
-//  Box
-const geometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
-const green = new THREE.MeshStandardMaterial({ color: 0x781ce5 });
-const cube = new THREE.Mesh(geometry, green);
-scene.add(cube);
-console.log('=== Cube – three-Vase.js [44] ===', cube);
-
-// Lathe
-// const points = [];
-// for (let i = 0; i < 2; ++i) {
-//   points.push(
-//     new THREE.Vector2(Math.sin(i * 0.2) * 0.2 + 0.5, (i - 0.5) * 0.8)
-//   );
-// }
-
-// const latheGeometry = new THREE.LatheGeometry(points);
-// const blue = new THREE.MeshStandardMaterial({ color: 0x781ce5 });
-// const lathe = new THREE.Mesh(latheGeometry, blue);
-// scene.add(lathe);
-// console.log(lathe);
-
-// // Lathe v2
-// const points = [];
-// for (let i = 0; i < 2; ++i) {
-//   points.push(
-//     new THREE.Vector2(Math.sin(i * 0.2) * 0.2 + 0.5, (i - 0.5) * 0.8)
-//   );
-// }
-
-// const latheGeometry = new THREE.LatheGeometry(points);
-// console.log('=== latheGeometry – three-Vase.js [68] ===', latheGeometry);
-// const extrudeSettings = {
-//   steps: 1,
-//   depth: 0.2,
-//   bevelEnabled: false,
-// };
-// latheGeometry.center();
-// console.log("=== latheGeometry – three-Vase.js [69] ===", latheGeometry);
-
-// latheGeometry.applyMatrix(new THREE.Matrix4().makeTranslation(0, 0, -0.1));
-// console.log("=== latheGeometry – three-Vase.js [70] ===", latheGeometry);
-
-// latheGeometry.mergeVertices();
-// latheGeometry.computeVertexNormals();
-// latheGeometry.computeBoundingBox();
-// console.log("=== latheGeometry – three-Vase.js [99] ===", latheGeometry);
-
-// const lathe = new THREE.Mesh(
-//   new THREE.ExtrudeGeometry(latheGeometry, extrudeSettings),
-//   new THREE.MeshStandardMaterial({ color: 0x781ce5 })
-// );
-
-// scene.add(lathe);
-// console.log(lathe);
-
-// Lathe v3
-const points = [];
-for (let i = 0; i < 4; ++i) {
-    let x = 0.1 * i;
-    let y = 0.5 * i;
-  points.push(
-    new THREE.Vector2(x,y)
-  );
+    const gridHelper = new THREE.GridHelper(size, divisions);
+    scene.add(gridHelper);
+    console.log("=== gridHelper – three-Vase.js [30] ===", gridHelper);
 }
 
-const segments = 12;
-const phiStart = 0;
-const phiLength = Math.PI * 2;
+function createCenterLine() {
+    const dots = [];
+    dots.push(new THREE.Vector3(0, 0, 0));
+    dots.push(new THREE.Vector3(0, 10, 0));
 
-let latheGeometry = new THREE.LatheGeometry(
-  points,
-  segments,
-  phiStart,
-  phiLength
-);
-// latheGeometry.center();
-console.log(latheGeometry); // check if latheGeometry is defined and has data
+    const centerLineGeom = new THREE.BufferGeometry().setFromPoints(dots);
+    const centerLine = new THREE.LineSegments(centerLineGeom, guideLineMat);
+    scene.add(centerLine);
+    console.log("=== centerLine – three-Vase.js [38] ===", centerLine);
+}
 
-let latheMaterial = new THREE.MeshBasicMaterial({ color: "white", wireframe: true });
-let lathe = new THREE.Mesh(latheGeometry, latheMaterial);
-console.log(lathe);
-// apply a test matrix to the lathe object
+function createBoundingBox() {
+  // Cube Guide
+  const boundingBoxGeom = new THREE.BoxGeometry(2, 2, 2);
+  const boundingBox = new THREE.Mesh(boundingBoxGeom, guideMat);
+  boundingBox.position.y = 1;
+  scene.add(boundingBox);
+}
 
-// check if the matrix was applied successfully
-console.log("Lathe Mesh: ", lathe);
-// add the lathe object to the scene
-scene.add(lathe);
+function drawGuides(origin) {
+  let guides = [];
+  vaseGuides.forEach((d, i) => {
+    let guideGeom = new THREE.PlaneGeometry(2, 2);
+
+    guides.push(new THREE.Mesh(guideGeom, guideMat));
+    guides[i].rotation.x = Math.PI / 2;
+    guides[i].position.y = 2 - (2 / 100) * d.y;
+    scene.add(guides[i]);
+  });
+}
+
+function createGuides() {
+    drawGrid();
+    createCenterLine(); 
+    createBoundingBox(); 
+    drawGuides(vaseGuides); 
+}
+
+// Functionality Testing
+let cube;
+function createTestCube() {
+  //  Test CUbe
+  const geometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
+  const green = new THREE.MeshStandardMaterial({ color: 0x781ce5 });
+cube = new THREE.Mesh(geometry, green);
+  scene.add(cube);
+  console.log("=== Cube – three-Vase.js [44] ===", cube);
+}
+
+createGuides();
+createTestCube();
+
+// Lathe v3
+drawVase(vaseGuides, "blue");
+
+
+function drawVase(origin, color) {
+    const points = [];
+    // for (let i = 0; i < 4; ++i) {
+    //     let x = 0.1 * i;
+    //     let y = 0.5 * i;
+    //     points.push(
+    //         new THREE.Vector2(x, y)
+    //     );
+    // }
+
+    origin.forEach((d, i) => {
+      let centerW = cvsW / 2;
+      let x = (1 / 100) * d.x;
+      let y = (2 / 100) * d.y;
+
+      points.push(new THREE.Vector2(x, y));
+    });
+
+    const segments = 12;
+    const phiStart = 0;
+    const phiLength = Math.PI * 2;
+
+    let latheGeometry = new THREE.LatheGeometry(
+      points,
+      segments,
+      phiStart,
+      phiLength
+    );
+    latheGeometry.center();
+    console.log(latheGeometry); // check if latheGeometry is defined and has data
+
+    let latheMaterial = new THREE.MeshBasicMaterial({
+      color: color,
+      wireframe: true,
+    });
+    let lathe = new THREE.Mesh(latheGeometry, latheMaterial);
+    lathe.position.y = 1;
+    console.log(lathe);
+    // apply a test matrix to the lathe object
+
+    // check if the matrix was applied successfully
+    console.log("Lathe Mesh: ", lathe);
+    lathe.rotation.x = Math.PI;
+    // lathe.rotation,y = 10
+    // add the lathe object to the scene
+    scene.add(lathe);
+
+}
+
 
 
 const ambient = new THREE.AmbientLight(0x404040, 5);
@@ -155,7 +167,9 @@ scene.add(point);
 camera.position.z = 5;
 
 function animate() {
-  requestAnimationFrame(animate);
+    requestAnimationFrame(animate);
+    
+    // lathe.rotation.x += 0.01;
 
   cube.rotation.x += 0.01;
   cube.rotation.y += 0.01;
