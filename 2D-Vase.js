@@ -34,7 +34,7 @@ let sketch1 = function (sketch) {
 
     function drawGuides() {
       
-      console.log("Vase Guides: ", vg)
+      // console.log("Vase Guides: ", vg)
       // Draw Vase Guides
       vg.map((d, i) => {
         let centerW = cvsW / 2;
