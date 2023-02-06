@@ -1,0 +1,19 @@
+{
+  "folders": [
+	{
+		"path": "../23-02-01-three-js-vase"
+	},
+	{
+		"path": "."
+	},
+	{
+		"path": "../_templates/three.js-master"
+	},
+	{
+		"path": "../23-01-06_three-js-cdn"
+	}
+],
+  "settings": {
+    "liveServer.settings.multiRootWorkspaceName": "23-01-30_vase-generator-v3"
+  }
+}
