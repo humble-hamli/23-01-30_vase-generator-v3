@@ -31,11 +31,11 @@ function getRndNumber(min, max) {
 }
 
 let vaseGuides = [
-  { id: "lip", x: getRndNumber(20, 30), y: 0 },
-  { id: "neck", x: getRndNumber(10, 20), y: 20 },
-  { id: "shoulder", x: getRndNumber(40, 50), y: 50 },
-  { id: "body", x: getRndNumber(60, 80), y: 60 },
-  { id: "fillet", x: getRndNumber(12, 18), y: 95 },
+  { id: "lip", x: getRndNumber(15, 40), y: 0 },
+  { id: "neck", x: getRndNumber(25, 40), y: getRndNumber(10, 30) },
+  { id: "shoulder", x: getRndNumber(40, 50), y: getRndNumber(30, 60) },
+  { id: "body", x: getRndNumber(60, 80), y: getRndNumber(60, 80) },
+  { id: "fillet", x: getRndNumber(12, 18), y: getRndNumber(80, 90) },
   { id: "foot", x: getRndNumber(20, 40), y: 100 },
 ];
 
@@ -44,9 +44,12 @@ console.log("Master Values: ", vaseGuides);
 reloadButton.onclick = () => {
   console.log("RELOAD");
   vaseGuides = [
-    { id: "lip", x: getRndNumber(20, 80), y: 0 },
-    { id: "body", x: getRndNumber(20, 80), y: 80 },
-    { id: "foot", x: getRndNumber(20, 80), y: 100 },
+    { id: "lip", x: getRndNumber(20, 30), y: 0 },
+    { id: "neck", x: getRndNumber(10, 20), y: getRndNumber(10, 20) },
+    { id: "shoulder", x: getRndNumber(40, 70), y: getRndNumber(20, 40) },
+    { id: "body", x: getRndNumber(40, 70), y: getRndNumber(40, 90) },
+    { id: "fillet", x: getRndNumber(12, 18), y: getRndNumber(90, 96) },
+    { id: "foot", x: getRndNumber(20, 40), y: 100 },
   ];
   calculateSlices(vaseGuides);
 }
@@ -116,9 +119,10 @@ function calculateSlices(vaseGuides) {
         }
 
         function testOffset() {
-          return -Math.cos(sliceHeight * 0.12) * 20;
+          return Math.sin(2 * Math.PI * (100 - sliceHeight / 100)) * 12;
         }
         
+        // let xOffset = 0;
         let xOffset = testOffset();
 
 

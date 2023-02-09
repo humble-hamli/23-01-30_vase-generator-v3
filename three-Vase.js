@@ -55,7 +55,7 @@ function init() {
   let gridMat = new THREE.MeshBasicMaterial({
     color: gridColor,
     wireframe: true,
-    opacity: 0.2
+    opacity: 0.2,
   });
 
   function createBoundingBox() {
@@ -96,7 +96,7 @@ function init() {
     wireframe: true,
   });
 
-  function createGuides() {
+  function activateControls() {
     // Link to Buttons
     if (gridButton.ariaPressed == "true") {
       drawGrid();
@@ -116,13 +116,12 @@ function init() {
     if (vaseButton.ariaPressed == "true") {
       drawVase(vase.slices, vaseMat);
     }
-
     // if (slicesButton.ariaPressed == "true") {
     //   drawGuides(vase.slices, vaseMat);
     // }
   }
 
-  createGuides();
+  activateControls();
 
   // Functionality Testing
   let cube;
@@ -134,7 +133,7 @@ function init() {
     scene.add(cube);
     // console.log("=== Cube – three-Vase.js [44] ===", cube);
   }
-  createTestCube();
+  // createTestCube();
 
   // Draw Vase
 
@@ -189,19 +188,16 @@ function init() {
 
   camera.position.z = 2.5;
   camera.position.y = 1.2;
-  
+
   function animate() {
     requestAnimationFrame(animate);
 
-   
     camera.lookAt(0, 1, 0);
-
-
 
     // lathe.rotation.x += 0.01;
 
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
+    // cube.rotation.x += 0.01;
+    // cube.rotation.y += 0.01;
 
     renderer.render(scene, camera);
   }
