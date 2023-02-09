@@ -1,5 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { OBJLoader } from "three/addons/loaders/OBJLoader";
+import { OBJExporter } from "three/addons/exporters/OBJExporter";
 
 let canvas, scene, camera, renderer;
 function init() {
@@ -73,7 +75,7 @@ function init() {
     });
   }
 
-    function createGuides() {
+  function createGuides() {
     // Link to Buttons
     if (gridButton.ariaPressed == "true") {
       drawGrid();
@@ -83,11 +85,11 @@ function init() {
       drawGuides(vaseGuides);
       createBoundingBox();
     }
-        
-     if (guideShapeButton.ariaPressed == "true") {
-       // Lathe v3
-         drawVase(vaseGuides, "blue");
-     }
+
+    if (guideShapeButton.ariaPressed == "true") {
+      // Lathe v3
+      drawVase(vaseGuides, "blue");
+    }
   }
 
   createGuides();
@@ -104,8 +106,7 @@ function init() {
   }
   createTestCube();
 
-
-    // Draw Vase
+  // Draw Vase
 
   function drawVase(origin, color) {
     const points = [];
@@ -145,10 +146,8 @@ function init() {
     lathe.rotation.x = Math.PI;
     // lathe.rotation,y = 10
     // add the lathe object to the scene
-      scene.add(lathe);
+    scene.add(lathe);
   }
-    
-
 
   // Lighting
   const ambient = new THREE.AmbientLight(0x404040, 5);
@@ -187,5 +186,31 @@ function reloadScene() {
 }
 reloadButton.addEventListener("click", reloadScene);
 
-let controls = document.querySelector(".btn-wrapper")
-controls.addEventListener("click", reloadScene)
+let controls = document.querySelector(".btn-wrapper");
+controls.addEventListener("click", reloadScene);
+
+// Export
+function exportScene(scene) {
+  const exporter = new OBJExporter();
+  const data = exporter.parse(scene);
+  saveString(data, "object.obj");
+}
+
+const link = document.createElement("a");
+link.style.display = "none";
+document.body.appendChild(link);
+
+function save(blob, filename) {
+  link.href = URL.createObjectURL(blob);
+  link.download = filename;
+  link.click();
+}
+
+function saveString(text, filename) {
+  save(new Blob([text], { type: "text/plain" }), filename);
+}
+
+let exportButton = document.querySelector("#exportButton");
+exportButton.addEventListener("click", () => {
+  exportScene(scene);
+});
