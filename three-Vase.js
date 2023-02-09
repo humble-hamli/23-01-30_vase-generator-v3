@@ -22,7 +22,7 @@ function init() {
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(cvsW, cvsH);
   renderer.setClearColor(0x222222);
-  canvas.appendChild(renderer.domElement);
+  canvas.prepend(renderer.domElement);
 
   const controls = new OrbitControls(camera, renderer.domElement);
 
@@ -148,7 +148,8 @@ function init() {
       points.push(new THREE.Vector2(x, y));
     });
 
-    const segments = 12;
+    console.log("CUTCOUNT:", cutCount)
+    const segments = cutCount;
     const phiStart = 0;
     const phiLength = Math.PI * 2;
 
@@ -210,15 +211,18 @@ init();
 
 // Reload
 function reloadScene() {
+  canvas.removeChild(canvas.firstChild);
   canvas = document.querySelector("#cvs3");
-  canvas.removeChild(canvas.lastChild);
   init();
   console.log("Reload Scene === at three-Vase.js [174]");
 }
 reloadButton.addEventListener("click", reloadScene);
 
-let controls = document.querySelector(".btn-wrapper");
-controls.addEventListener("click", reloadScene);
+let controls1 = document.querySelector(".controls-1");
+controls1.addEventListener("click", reloadScene);
+
+let controls2 = document.querySelector("#controls-2");
+controls2.addEventListener("click", () => { reloadButton.click(); });
 
 // Export
 function exportScene(scene) {

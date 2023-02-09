@@ -59,6 +59,7 @@ let vase = {
   slices: []
 }
 
+let cutCount;
 function calculateSlices(vaseGuides) {
   vase = {
     parts: [],
@@ -66,6 +67,7 @@ function calculateSlices(vaseGuides) {
   };
 
   let sliceCount = document.querySelector("#sliceCount").value;
+  cutCount = document.querySelector("#cutCount").value;
   let singleSliceHeight = 100 / sliceCount
   
   let sortedSlices = []
@@ -119,7 +121,10 @@ function calculateSlices(vaseGuides) {
         }
 
         function testOffset() {
-          return Math.sin(2 * Math.PI * (100 - sliceHeight / 100)) * 12;
+          return (
+            (Math.sin(((-2 * (2 * Math.PI)) / 100) * sliceHeight) * 6)
+            - (Math.cos(((8 * (2 * Math.PI)) / 100)) * x/6)
+          );
         }
         
         // let xOffset = 0;
