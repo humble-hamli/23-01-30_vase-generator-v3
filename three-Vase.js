@@ -211,6 +211,7 @@ init();
 
 // Reload
 function reloadScene() {
+  cutCount = document.querySelector("#cutCount").value
   canvas.removeChild(canvas.firstChild);
   canvas = document.querySelector("#cvs3");
   init();
@@ -218,11 +219,14 @@ function reloadScene() {
 }
 reloadButton.addEventListener("click", reloadScene);
 
+let controls2 = document.getElementById("controls-2");
+controls2.addEventListener("click", reloadScene);
+
 let controls1 = document.querySelector(".controls-1");
 controls1.addEventListener("click", reloadScene);
 
-let controls2 = document.querySelector("#controls-2");
-controls2.addEventListener("click", () => { reloadButton.click(); });
+// let controls2 = document.querySelector("#controls-2");
+// controls2.addEventListener("click", () => { controls1.click() });
 
 // Export
 function exportScene(scene) {
