@@ -1,3 +1,21 @@
 body {
-  background-color: lightskyblue;
+  background-color: #202020 !important;
+}
+
+.vase-buttons button {
+  background-color: #edcc00 !important;
+  border-color: #ffcc00 !important;
+  color: #202020 !important;
+}
+.vase-buttons button:hover, .vase-buttons button.active {
+  background-color: #c09900 !important;
+}
+
+.guide-buttons button {
+  background-color: #dd00cc !important;
+  border-color: #ff00cc !important;
+  color: #202020 !important;
+}
+.guide-buttons button:hover, .guide-buttons button.active {
+  background-color: #c00099 !important;
 }/*# sourceMappingURL=styles.css.map */

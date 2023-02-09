@@ -8,16 +8,16 @@ function init() {
   // Setup
   canvas = document.querySelector("#cvs3");
   let cvs = canvas;
-  console.log(cvs);
+  // console.log(cvs);
   let cvsW = getCvsWidth(cvs);
   let cvsH = getCvsWidth(cvs);
 
-  console.log("Canvas 3 created Size: ", cvsW, cvsH);
+  console.log("Canvas 3 created Size: ", cvs);
 
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(75, cvsW / cvsH, 0.1, 1000);
 
-  console.log("Scene and Camera created === at three-Vase.js [14]");
+  // console.log("Scene and Camera created === at three-Vase.js [14]");
 
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(cvsW, cvsH);
@@ -29,11 +29,6 @@ function init() {
   // add Objects
 
   // Guides
-  let guideLineMat = new THREE.LineBasicMaterial({ color: "blue" });
-  let guideMat = new THREE.MeshBasicMaterial({
-    color: "purple",
-    wireframe: true,
-  });
 
   function drawGrid() {
     const size = 10;
@@ -41,55 +36,90 @@ function init() {
 
     const gridHelper = new THREE.GridHelper(size, divisions);
     scene.add(gridHelper);
-    console.log("=== gridHelper – three-Vase.js [30] ===", gridHelper);
+    // console.log("=== gridHelper – three-Vase.js [30] ===", gridHelper);
   }
 
   function createCenterLine() {
     const dots = [];
-    dots.push(new THREE.Vector3(0, 0, 0));
-    dots.push(new THREE.Vector3(0, 10, 0));
+    dots.push(new THREE.Vector3(0, -1, 0));
+    dots.push(new THREE.Vector3(0, 3, 0));
 
     const centerLineGeom = new THREE.BufferGeometry().setFromPoints(dots);
     const centerLine = new THREE.LineSegments(centerLineGeom, guideLineMat);
     scene.add(centerLine);
-    console.log("=== centerLine – three-Vase.js [38] ===", centerLine);
+    // console.log("=== centerLine – three-Vase.js [38] ===", centerLine);
   }
+
+  // define colors and materials
+  let gridColor = new THREE.Color(20, 10, 10);
+  let gridMat = new THREE.MeshBasicMaterial({
+    color: gridColor,
+    wireframe: true,
+    opacity: 0.2
+  });
 
   function createBoundingBox() {
     // Cube Guide
     const boundingBoxGeom = new THREE.BoxGeometry(2, 2, 2);
-    const boundingBox = new THREE.Mesh(boundingBoxGeom, guideMat);
+    const boundingBox = new THREE.Mesh(boundingBoxGeom, gridMat);
     boundingBox.position.y = 1;
     scene.add(boundingBox);
   }
 
-  function drawGuides(origin) {
+  function drawGuides(origin, material) {
     let guides = [];
     vaseGuides.forEach((d, i) => {
       let guideGeom = new THREE.PlaneGeometry(2, 2);
 
-      guides.push(new THREE.Mesh(guideGeom, guideMat));
+      guides.push(new THREE.Mesh(guideGeom, material));
       guides[i].rotation.x = Math.PI / 2;
       guides[i].position.y = 2 - (2 / 100) * d.y;
       scene.add(guides[i]);
     });
   }
 
+  console.log(guideStroke);
+  let guideColor = new THREE.Color(
+    guideStroke[0],
+    guideStroke[1],
+    guideStroke[2]
+  );
+  let guideLineMat = new THREE.LineBasicMaterial({ color: "blue" });
+  let guideMat = new THREE.MeshBasicMaterial({
+    color: guideColor,
+    wireframe: true,
+  });
+
+  let vaseColor = new THREE.Color(vaseStroke[0], vaseStroke[1], vaseStroke[2]);
+  let vaseMat = new THREE.MeshBasicMaterial({
+    color: vaseColor,
+    wireframe: true,
+  });
+
   function createGuides() {
     // Link to Buttons
     if (gridButton.ariaPressed == "true") {
       drawGrid();
+      createCenterLine();
     }
 
     if (guideButton.ariaPressed == "true") {
-      drawGuides(vaseGuides);
+      drawGuides(vaseGuides, gridMat);
       createBoundingBox();
     }
 
     if (guideShapeButton.ariaPressed == "true") {
       // Lathe v3
-      drawVase(vaseGuides, "blue");
+      drawVase(vaseGuides, guideMat);
     }
+
+    if (vaseButton.ariaPressed == "true") {
+      drawVase(vase.slices, vaseMat);
+    }
+
+    // if (slicesButton.ariaPressed == "true") {
+    //   drawGuides(vase.slices, vaseMat);
+    // }
   }
 
   createGuides();
@@ -102,13 +132,13 @@ function init() {
     const green = new THREE.MeshStandardMaterial({ color: 0x781ce5 });
     cube = new THREE.Mesh(geometry, green);
     scene.add(cube);
-    console.log("=== Cube – three-Vase.js [44] ===", cube);
+    // console.log("=== Cube – three-Vase.js [44] ===", cube);
   }
   createTestCube();
 
   // Draw Vase
 
-  function drawVase(origin, color) {
+  function drawVase(origin, material) {
     const points = [];
 
     origin.forEach((d, i) => {
@@ -130,19 +160,20 @@ function init() {
       phiLength
     );
     latheGeometry.center();
-    console.log(latheGeometry); // check if latheGeometry is defined and has data
+    // console.log(latheGeometry); // check if latheGeometry is defined and has data
 
-    let latheMaterial = new THREE.MeshBasicMaterial({
-      color: color,
-      wireframe: true,
-    });
-    let lathe = new THREE.Mesh(latheGeometry, latheMaterial);
+    // let latheMaterial = new THREE.MeshBasicMaterial({
+    //   color: color,
+    //   wireframe: true,
+    // });
+
+    let lathe = new THREE.Mesh(latheGeometry, material);
     lathe.position.y = 1;
-    console.log(lathe);
+    // console.log(lathe);
     // apply a test matrix to the lathe object
 
     // check if the matrix was applied successfully
-    console.log("Lathe Mesh: ", lathe);
+    // console.log("Lathe Mesh: ", lathe);
     lathe.rotation.x = Math.PI;
     // lathe.rotation,y = 10
     // add the lathe object to the scene
@@ -156,12 +187,16 @@ function init() {
   scene.add(ambient);
   scene.add(point);
 
-  camera.position.z = 5;
-  camera.position.y = 1;
-  camera.lookAt(0, 1, 0);
-
+  camera.position.z = 2.5;
+  camera.position.y = 1.2;
+  
   function animate() {
     requestAnimationFrame(animate);
+
+   
+    camera.lookAt(0, 1, 0);
+
+
 
     // lathe.rotation.x += 0.01;
 

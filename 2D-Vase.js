@@ -1,12 +1,15 @@
 // 2D Vase
 let sketch1 = function (sketch) {
   let cvs = cvs1;
-  console.log(cvs);
+  // console.log(cvs);
   let cvsW = getCvsWidth(cvs);
   let cvsH = getCvsWidth(cvs);
 
+  let bgFill = 60
+
   sketch.setup = function () {
-    console.log(cvs);
+    
+    // console.log(cvs);
     let canvas = sketch.createCanvas(cvsW, cvsH);
     cvs.prepend(canvas.elt);
     console.log(`Canvas 1 created size: ${cvsW} ${cvsW}`);
@@ -14,29 +17,42 @@ let sketch1 = function (sketch) {
 
   sketch.draw = function () {
     let sliceCount = document.querySelector("#sliceCount").value;
-    let vg = vaseGuides;
+    let activeVaseGuides = vaseGuides;
     
 
     //for canvas 1
-    sketch.background(60);
+    sketch.background(bgFill);
 
     if (gridButton.ariaPressed == "true") {
       drawGrid();
     }
 
     if (guideShapeButton.ariaPressed == "true") {
-      drawGuideShape();
+      drawShape(activeVaseGuides, guideFill, guideStroke);
     }
 
     if (guideButton.ariaPressed == "true") {
-      drawGuides();
+      drawGuides(activeVaseGuides, guideStroke);
     }
 
-    function drawGuides() {
-      
-      // console.log("Vase Guides: ", vg)
+    if (vaseButton.ariaPressed == "true") {
+      drawShape(vase.slices, vaseFill, vaseStroke);
+    }
+
+    if (slicesButton.ariaPressed == "true") {
+      drawGuides(vase.slices, vaseStroke);
+    }
+
+     
+
+    
+
+
+
+    function drawGuides(sliceArray, sColor) {
+      // console.log("Vase Guides: ", activeVaseGuides)
       // Draw Vase Guides
-      vg.map((d, i) => {
+      sliceArray.map((d, i) => {
         let centerW = cvsW / 2;
         let x1 = centerW - ((cvsW / 100) * d.x) / 2;
         let y1 = (cvsH / 100) * d.y;
@@ -46,28 +62,47 @@ let sketch1 = function (sketch) {
         // console.log(d)
         sketch.push();
         sketch.strokeWeight(3);
-        sketch.stroke(255, 0, 255);
+        sketch.stroke(sColor);
         sketch.line(x1, y1, x2, y2);
         sketch.pop();
+
+        // // desciption
+        // sketch.push();
+        // // if (y1 >= cvsH) {
+        // //   sketch.translate(0, -6);
+        // // } else if (this.h <= 0) {
+        // //   sketch.translate(0, 10);
+        // // }
+        // // if (x1 >= cvsW * 0.8) {
+        // //   console.log("Translate Info");
+        // //   sketch.translate(-80, 0);
+        // // }
+        // sketch.translate(3, 0);
+        // sketch.textSize(10);
+        // let displayText = "    " + sketch.round(x1) + " / " + sketch.round(y1);
+        // sketch.text(displayText, x2, y2);
+        // sketch.pop();
+
+        
       });
     }
 
-    function drawGuideShape() {
+    function drawShape(sliceArray, fColor,sColor) {
       // Draw Vase Shape
       sketch.push();
       sketch.strokeWeight(1);
-      sketch.stroke(255, 0, 255);
-      sketch.fill(122, 0, 122);
+      sketch.stroke(sColor);
+      sketch.fill(fColor);
       sketch.beginShape();
 
-      vg.forEach((d, i) => {
+      sliceArray.forEach((d, i) => {
         let centerW = cvsW / 2;
         let x1 = centerW - ((cvsW / 100) * d.x) / 2;
         let y1 = (cvsH / 100) * d.y;
         sketch.vertex(x1, y1);
       });
 
-      vg
+      sliceArray
         .slice(0)
         .reverse()
         .forEach((d, i) => {
@@ -94,6 +129,8 @@ let sketch1 = function (sketch) {
       sketch.pop();
     }
   };
+
+
 
   sketch.windowResized = function () {
     let cvsW = getCvsWidth(cvs);
