@@ -30,27 +30,47 @@ function getRndNumber(min, max) {
   return Math.random() * (max - min + 1) + min;
 }
 
-let vaseGuides = [
-  { id: "lip", x: getRndNumber(15, 40), y: 0 },
-  { id: "neck", x: getRndNumber(25, 40), y: getRndNumber(10, 30) },
-  { id: "shoulder", x: getRndNumber(40, 50), y: getRndNumber(30, 60) },
-  { id: "body", x: getRndNumber(60, 80), y: getRndNumber(60, 80) },
-  { id: "fillet", x: getRndNumber(12, 18), y: getRndNumber(80, 90) },
-  { id: "foot", x: getRndNumber(20, 40), y: 100 },
+let vaseGuides = [];
+
+let mastersRanges = [
+  { id: "lip", x: { min: 15, max: 40 }, y: { min: -1, max: 0 } },
+  { id: "neck", x: { min: 25, max: 40 }, y: { min: 10, max: 30 } },
+  { id: "shoulder", x: { min: 40, max: 50 }, y: { min: 30, max: 60 } },
+  { id: "body", x: { min: 60, max: 80 }, y: { min: 60, max: 80 } },
+  { id: "fillet", x: { min: 12, max: 18 }, y: { min: 80, max: 90 } },
+  { id: "foot", x: { min: 20, max: 50 }, y: { min: 100, max: 100 } },
 ];
+
+function getRndGuideValues() {
+  vaseGuides = [];
+  mastersRanges.forEach((guide, i) => {
+    let id = guide.id;
+
+    let y;
+
+    if (guide.y.max > 0) {
+      y = getRndNumber(guide.y.min, guide.y.max);
+    } else {
+      y = 0
+    }
+
+    let x = getRndNumber(guide.x.min, guide.x.max);
+    
+    
+    
+
+    vaseGuides.push({ id: id, x: x, y: y });
+  }); 
+}
+
+getRndGuideValues(); 
+
 
 console.log("Master Values: ", vaseGuides);
 
 reloadButton.onclick = () => {
   console.log("RELOAD");
-  vaseGuides = [
-    { id: "lip", x: getRndNumber(20, 30), y: 0 },
-    { id: "neck", x: getRndNumber(10, 20), y: getRndNumber(10, 20) },
-    { id: "shoulder", x: getRndNumber(40, 70), y: getRndNumber(20, 40) },
-    { id: "body", x: getRndNumber(40, 70), y: getRndNumber(40, 90) },
-    { id: "fillet", x: getRndNumber(12, 18), y: getRndNumber(90, 96) },
-    { id: "foot", x: getRndNumber(20, 40), y: 100 },
-  ];
+  getRndGuideValues(); 
   calculateSlices(vaseGuides);
 }
 
